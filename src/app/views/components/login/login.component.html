@@ -1,6 +1,8 @@
-<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden" style="background-image: url('assets/demo/images/blocks/hero/background.jpg'); background-size: cover; background-position: center; position: relative;">
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden"
+    style="background-image: url('assets/demo/images/blocks/hero/background.jpg'); background-size: cover; background-position: center; position: relative;">
     <!-- <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5);"></div> -->
     <div class="flex flex-column align-items-center justify-content-center">
+        <p-toast></p-toast>
         <div
             style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
             <div class="w-full surface-card py-6 px-5 sm:px-5" style="border-radius:53px">
@@ -9,22 +11,29 @@
                     <span class="text-600 font-medium">Sign in to TaskPro</span>
                 </div>
                 <div>
-                    <label for="userID" class="block text-900 text-xl font-small mb-2">EMAIL</label>
-                    <input id="userID" type="text" placeholder="Email" pInputText class="w-full md:w-30rem mb-5"
-                        style="padding:1rem">
+                    <label class="block text-900 text-m font-small mb-2">EMAIL</label>
+                    <input id="email1" type="text" [(ngModel)]="email"
+                        placeholder="Email" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem" required
+                        autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !email}" />
 
-                    <label for="password1" class="block text-900 font-small text-xl mb-2">PASSWORD</label>
-                    <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true"
-                        styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+                    <label class="block text-900 font-small text-m mb-2">PASSWORD</label>
+                    <p-password id="password1" [(ngModel)]="password"
+                        placeholder="Password" [toggleMask]="true" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !password}" styleClass="mb-5"
+                        inputStyleClass="w-full p-3 md:w-30rem"></p-password>
 
-                    <div class="flex align-items-center justify-content-between mb-5 gap-5">
+                    <div class="flex align-items-center justify-content-between mb-2 gap-5">
+                        <div *ngIf="showSpinner" class="spinner-overlay">
+                            <div class="spinner"></div>
+                            <div class="spinner-text">Processing...</div>
+                        </div>
                         <div class="flex align-items-center">
-                            <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
-                            <label for="rememberme1">Remember me</label>
+                            <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)"
+                [routerLink]="['signup']">Signup?</a>
                         </div>
                     </div>
-                    <button pButton pRipple label="Sign In" class="w-full p-3 text-xl"
-                        [routerLink]="['/dashboard']"></button>
+                    <button (click)="onLoginSubmit()" [disabled]="disableButton" pButton pRipple label="Sign In"
+                        class="w-full p-3 text-xl"></button>
                 </div>
             </div>
         </div>

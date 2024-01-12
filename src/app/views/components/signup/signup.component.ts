@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
+    selector: 'app-signup',
+    templateUrl: './signup.component.html',
+    styleUrls: ['./signup.component.scss'],
     providers: [MessageService],
 })
-export class LoginComponent {
+export class SignupComponent {
     constructor(
         private apiService: ApiService,
         private router: Router,

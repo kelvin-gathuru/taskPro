@@ -26,6 +26,7 @@ export class AppMenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-cog',
                 items: [
                     { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/dashboard/tasks/list'] },
+                    { label: 'Kanban', icon: 'pi pi-fw pi-window-minimize', routerLink: ['/dashboard/tasks/kanban'] },
                 ]
             }
         ];

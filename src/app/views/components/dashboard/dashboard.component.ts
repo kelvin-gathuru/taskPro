@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { ApiService } from '../../service/apiService';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -10,83 +11,61 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     items!: MenuItem[];
 
-    chartData: any;
+    recentTasks: any;
 
-    products: any;
+    allTasks: any;
 
-    chartOptions: any;
+    assignees: any;
+
+    assigneesSinceLastWeek: any;
+
+    tasksAddedSinceLastWeek: any;
 
     subscription!: Subscription;
 
-    constructor(public layoutService: LayoutService) {
+    pending: any;
+    newlyCreatedButPending: any;
+    completed: any;
+    newlyCompletedLastSevenDays: any;
+
+    constructor(public layoutService: LayoutService, private apiService: ApiService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(() => {
-            this.initChart();
+            
         });
     }
 
     ngOnInit() {
-        this.initChart();
-
-        this.items = [
-            { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-            { label: 'Remove', icon: 'pi pi-fw pi-minus' }
-        ];
+        this.loadReportsForListing();
+        
     }
 
-    initChart() {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    
 
-        this.chartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'Sales',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--green-700'),
-                    borderColor: documentStyle.getPropertyValue('--green-700'),
-                    tension: .4
-                }
-            ]
-        };
-
-        this.chartOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: textColor
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
-        };
-    }
+        
 
     ngOnDestroy() {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
     }
+
+    loadReportsForListing() {
+        // Call the ApiService to fetch property data for listing
+        this.apiService.getReports().subscribe(
+          (data: any) => {
+            this.allTasks = data.allTasks;
+            this.recentTasks = data.recentTasks;
+            this.tasksAddedSinceLastWeek = data.tasksAddedSinceLastWeek;
+            this.assignees = data.assignees;
+            this.assigneesSinceLastWeek = data.assigneesSinceLastWeek;
+            this.pending = data.pending;
+            this.newlyCreatedButPending = data.newlyCreatedButPending;
+            this.completed = data.completed;
+            this.newlyCompletedLastSevenDays = data.newlyCompletedLastSevenDays;
+          },
+          (error) => {
+            console.error('Error fetching property data:', error);
+          }
+        );
+      }
 }

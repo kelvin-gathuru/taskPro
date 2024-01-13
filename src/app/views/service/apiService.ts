@@ -14,12 +14,20 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   signup(formData: any): Observable<any> {
-    const endpoint = `${this.baseUrl}save_rent_owner`;
+    const endpoint = `${this.baseUrl}auth/register`;
     return this.http.post(endpoint, formData);
   }
 
   login(credentials: any): Observable<any> {
     const url = `${this.baseUrl}auth/login`;
     return this.http.post(url, credentials);
+  }
+  getReports(): Observable<any[]> {
+    const endpoint = `${this.baseUrl}report`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.get<any[]>(endpoint, { headers });
   }
 }

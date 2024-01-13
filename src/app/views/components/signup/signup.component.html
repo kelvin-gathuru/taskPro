@@ -10,19 +10,19 @@
                     <div class="text-500 text-m font-medium mb-3">Sign Up to TaskPro!</div>
                 </div>
                 <div>
-                    <label class="block text-500 text-m font-small mb-1">EMAIL</label>
-                    <input id="email1" type="text" [(ngModel)]="email" placeholder="Email" pInputText
+                    <label class="block text-500 text-m font-small mb-1">FIRST NAME</label>
+                    <input id="fname" type="text" [(ngModel)]="fname" placeholder="First Name" pInputText
                         class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
-                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !email}" />
-                    <label class="block text-500 text-m font-small mb-1">EMAIL</label>
-                    <input id="email1" type="text" [(ngModel)]="email" placeholder="Email" pInputText
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !fname}" />
+                    <label class="block text-500 text-m font-small mb-1">MIDDLE NAME</label>
+                    <input id="mname" type="text" [(ngModel)]="mname" placeholder="Middle Name" pInputText
                         class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
-                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !email}" />
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !mname}" />
 
-                    <label class="block text-500 font-small text-m mb-1">PASSWORD</label>
-                    <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true"
-                        required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !password}"
-                        styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+                    <label class="block text-500 text-m font-small mb-1">LAST NAME</label>
+                    <input id="lname" type="text" [(ngModel)]="lname" placeholder="Last Name" pInputText
+                        class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !lname}" />
                     <label class="block text-500 text-m font-small mb-2">EMAIL</label>
                     <input id="email1" type="text" [(ngModel)]="email" placeholder="Email" pInputText
                         class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
@@ -35,15 +35,15 @@
 
                     <div class="flex align-items-center justify-content-between mb-1 gap-5">
                         <div class="flex align-items-center">
-                            <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)"
-                [routerLink]="['']">Login?</a>
+                            <a class="font-medium no-underline ml-2 text-right cursor-pointer"
+                                style="color: var(--primary-color)" [routerLink]="['']">Login?</a>
                         </div>
                         <div *ngIf="showSpinner" class="spinner-overlay">
                             <div class="spinner"></div>
                             <div class="spinner-text">Processing...</div>
                         </div>
                     </div>
-                    <button (click)="onLoginSubmit()" [disabled]="disableButton" pButton pRipple label="Sign In"
+                    <button (click)="onSignupSubmit()" [disabled]="disableButton" pButton pRipple label="Sign Up"
                         class="w-full p-3 text-xl"></button>
                 </div>
             </div>

@@ -16,7 +16,11 @@ export class SignupComponent {
         private messageService: MessageService
     ) {}
 
-    valCheck: string[] = ['remember'];
+    fname: string;
+
+    mname: string;
+
+    lname: string;
 
     password: string;
 
@@ -28,19 +32,27 @@ export class SignupComponent {
 
     disableButton: boolean = false;
 
-   
-    onLoginSubmit() {
+    onSignupSubmit() {
         this.submitted = true;
-        if (this.email?.trim() && this.password?.trim()) {
+        if (
+            this.email?.trim() &&
+            this.password?.trim() &&
+            this.lname?.trim() &&
+            this.fname?.trim() &&
+            this.mname?.trim()
+        ) {
             this.disableButton = true;
             this.showSpinner = true;
 
             const payload = {
+                fname: this.fname,
+                mname: this.mname,
+                lname: this.lname,
                 email: this.email,
                 password: this.password,
             };
 
-            this.apiService.login(payload).subscribe(
+            this.apiService.signup(payload).subscribe(
                 (result: any) => {
                     if (result.status === 'OK') {
                         this.messageService.add({

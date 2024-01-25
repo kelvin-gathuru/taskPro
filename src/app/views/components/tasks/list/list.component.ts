@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ApiService } from 'src/app/views/api/api.service';
+import { ApiService } from 'src/app/views/service/apiService';
 
 @Component({
     templateUrl: './list.component.html',
@@ -9,11 +9,11 @@ import { ApiService } from 'src/app/views/api/api.service';
 })
 export class ListComponent implements OnInit {
 
-    clientsDialog: boolean = false;
+    tasksDialog: boolean = false;
 
-    client: any = {};
+    task: any = {};
 
-    selectedClients: any[]
+    selectedtasks: any[]
 
     submitted: boolean = false;
 
@@ -23,7 +23,7 @@ export class ListComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    clients: any[];
+    tasks: any[];
 
     regions: any[] ;
 
@@ -34,18 +34,14 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
 
-        this.loadClients();
-
-        this.loadRegions();
+      this.loadReportsForListing();
 
         this.cols = [
-            { field: 'name', header: 'Name' },
-            { field: 'phone_number', header: 'Tel' },
-            { field: 'entity_code', header: 'Client/Agent ID' },
-            { field: 'active', header: 'Status' },
-            { field: 'region', header: 'Region' },
-            { field: 'client_type', header: 'Client Type' },
-            { field: 'entity_type', header: 'Entity Type' }
+            { field: 'title', header: 'Task' },
+            { field: 'description', header: 'Description' },
+            { field: 'priority', header: 'Priority' },
+            { field: 'dueDate', header: 'Due Date' },
+            { field: 'assignedUser', header: 'Assigned User' },
         ];
 
         this.statuses = [
@@ -54,7 +50,7 @@ export class ListComponent implements OnInit {
         ];
 
         this.regType = [
-            { label: 'CLIENT', value: 'client' },
+            { label: 'task', value: 'task' },
             { label: 'SALES AGENT', value: 'salesAgent' },
             { label: 'OTHERS', value: 'others' }
         ];
@@ -67,18 +63,18 @@ export class ListComponent implements OnInit {
     }
 
     openNew() {
-        this.client = {};
+        this.task = {};
         this.submitted = false;
-        this.clientsDialog = true;
+        this.tasksDialog = true;
     }
 
     hideDialog() {
-        this.clientsDialog = false;
+        this.tasksDialog = false;
     }
 
-    editClient(client: any) {
-        this.client = { ...client };
-        this.clientsDialog = true;
+    edittask(task: any) {
+        this.task = { ...task };
+        this.tasksDialog = true;
     }
 
     // saveProduct() {
@@ -101,7 +97,7 @@ export class ListComponent implements OnInit {
     //         }
 
     //         this.products = [...this.products];
-    //         this.clientsDialog = false;
+    //         this.tasksDialog = false;
     //         this.product = {};
     //     }
     // }
@@ -131,30 +127,17 @@ export class ListComponent implements OnInit {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
-    loadClients() {
-        this.apiService.getClients().subscribe(
-          (data: any) => {
-            if(data.success==false){
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
-            }
-            this.clients = data;
-          },
-          (error) => {
-            console.error('Error fetching clients data:', error);
-          }
-        );
-      }
-      loadRegions() {
-        this.apiService.getRegions().subscribe(
-          (data: any) => {
-            if(data.success==false){
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
-            }
-            this.regions = data;
-          },
-          (error) => {
-            console.error('Error fetching regions data:', error);
-          }
-        );
-      }
+    loadReportsForListing() {
+      // Call the ApiService to fetch property data for listing
+      this.apiService.listTasks().subscribe(
+        (data: any) => {
+          this.tasks = data.data.stages.tasks;
+        },
+        (error) => {
+          console.error('Error fetching property data:', error);
+        }
+      );
+    }
+
+    
 }

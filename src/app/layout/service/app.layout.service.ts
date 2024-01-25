@@ -30,7 +30,7 @@ export class LayoutService {
         menuMode: 'static',
         colorScheme: 'light',
         theme: 'lara-light-indigo',
-        scale: 14,
+        scale: 12,
     };
 
     state: LayoutState = {

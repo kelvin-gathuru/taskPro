@@ -30,4 +30,12 @@ export class ApiService {
 
     return this.http.get<any[]>(endpoint, { headers });
   }
+  listTasks(): Observable<any[]> {
+    const endpoint = `${this.baseUrl}allStagesAndTheirTasks`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.get<any[]>(endpoint, { headers });
+  }
 }

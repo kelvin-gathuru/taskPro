@@ -7,28 +7,28 @@
             style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
             <div class="w-full surface-card py-6 px-5 sm:px-5" style="border-radius:53px">
                 <div class="text-center mb-5">
-                    <div class="text-500 text-m font-medium mb-3">Sign Up to TaskPro!</div>
+                    <div class="text-900 text-m font-medium mb-3">Sign Up to TaskPro!</div>
                 </div>
                 <div>
-                    <label class="block text-500 text-m font-small mb-1">FIRST NAME</label>
+                    <label class="block text-900 text-m font-small mb-1">FIRST NAME</label>
                     <input id="fname" type="text" [(ngModel)]="fname" placeholder="First Name" pInputText
                         class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
                         [ngClass]="{'ng-invalid ng-dirty' : submitted && !fname}" />
-                    <label class="block text-500 text-m font-small mb-1">MIDDLE NAME</label>
+                    <label class="block text-900 text-m font-small mb-1">MIDDLE NAME</label>
                     <input id="mname" type="text" [(ngModel)]="mname" placeholder="Middle Name" pInputText
                         class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
                         [ngClass]="{'ng-invalid ng-dirty' : submitted && !mname}" />
 
-                    <label class="block text-500 text-m font-small mb-1">LAST NAME</label>
+                    <label class="block text-900 text-m font-small mb-1">LAST NAME</label>
                     <input id="lname" type="text" [(ngModel)]="lname" placeholder="Last Name" pInputText
                         class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
                         [ngClass]="{'ng-invalid ng-dirty' : submitted && !lname}" />
-                    <label class="block text-500 text-m font-small mb-2">EMAIL</label>
+                    <label class="block text-900 text-m font-small mb-2">EMAIL</label>
                     <input id="email1" type="text" [(ngModel)]="email" placeholder="Email" pInputText
                         class="w-full md:w-30rem mb-5" style="padding:1rem" required autofocus
                         [ngClass]="{'ng-invalid ng-dirty' : submitted && !email}" />
 
-                    <label class="block text-500 font-small text-m mb-1">PASSWORD</label>
+                    <label class="block text-900 font-small text-m mb-1">PASSWORD</label>
                     <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true"
                         required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !password}"
                         styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>

@@ -69,7 +69,7 @@
                             <th pSortableColumn="title">Task <p-sortIcon field="title"></p-sortIcon></th>
                             <th pSortableColumn="priority">Priority <p-sortIcon field="priority"></p-sortIcon></th>
                             <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
-                            <th pSortableColumn="createdAt">Date <p-sortIcon field="createdAt"></p-sortIcon></th>
+                            <!-- <th pSortableColumn="createdAt">Date <p-sortIcon field="createdAt"></p-sortIcon></th> -->
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-task>
@@ -86,10 +86,10 @@
                                 <span class="p-column-title">Description</span>
                                 {{task.description}}
                             </td>
-                            <td style="width:15%; min-width:10rem;">
+                            <!-- <td style="width:15%; min-width:10rem;">
                                 <span class="p-column-title">Date</span>
                                 {{task.createdAt}}
-                            </td>
+                            </td> -->
                         </tr>
                     </ng-template>
                 </p-table>
@@ -102,7 +102,6 @@
                 <div class="flex justify-content-between align-items-center mb-5">
                     <h5>Todays Tasks with Priority</h5>
                     <div>
-                        <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text p-button-plain" (click)="menu.toggle($event)"></button>
                         <p-menu #menu [popup]="true" [model]="items"></p-menu>
                     </div>
                 </div>

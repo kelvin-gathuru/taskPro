@@ -16,11 +16,11 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="clients" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-                [globalFilterFields]="['name','phone_number','entity_code','active','region','client_type','entity_type']" [paginator]="true"
+            <p-table #dt [value]="tasks" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="['title','description','priority','dueDate','assignedUser']" [paginator]="true"
                 [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                [(selection)]="selectedClients" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                [(selection)]="selectedtasks" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Tasks</h5>
@@ -34,51 +34,44 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>#</th>
-                        <th pSortableColumn="entity_code">Client ID <p-sortIcon field="entity_code"></p-sortIcon></th>
-                        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                        <th pSortableColumn="phone_number">Tel <p-sortIcon field="phone_number"></p-sortIcon></th>
-                        <th pSortableColumn="active">Status <p-sortIcon field="active"></p-sortIcon></th>
-                        <th pSortableColumn="region">Region <p-sortIcon field="region"></p-sortIcon> </th>
-                        <th pSortableColumn="client_type">Client Type <p-sortIcon field="client_type"></p-sortIcon> </th>
-                        <th pSortableColumn="entity_type">Reg Type <p-sortIcon field="entity_type"></p-sortIcon> </th>
+                        <th pSortableColumn="title">Task <p-sortIcon field="title"></p-sortIcon></th>
+                        <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
+                        <th pSortableColumn="priority">Priority <p-sortIcon field="priority"></p-sortIcon></th>
+                        <th pSortableColumn="dueDate">Due Date <p-sortIcon field="dueDate"></p-sortIcon></th>
+                        <th pSortableColumn="assignedUser">Assigned User <p-sortIcon field="assignedUser"></p-sortIcon> </th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-client let-rowIndex="rowIndex">
+                <ng-template pTemplate="body" let-task let-rowIndex="rowIndex">
                     <tr>
                         <td>
                             {{rowIndex + 1 }}
                         </td>
                         <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">Client ID</span>
-                            {{client.entity_code}}
+                            <span class="p-column-title"> Task</span>
+                            {{task.title}}
                         </td>
                         <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">Name</span>
-                            {{client.name}}
+                            <span class="p-column-title">Description</span>
+                            {{task.description}}
                         </td>
                         <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">Tel</span>
-                            {{client.phone_number}}
+                            <span class="p-column-title">Priority</span>
+                            {{task.priority}}
                         </td>
                         <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">Status</span>
-                            {{client.active}}
+                            <span class="p-column-title">Due Date</span>
+                            {{task.dueDate}}
                         </td>
                         <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">region</span>
-                            {{client.region}}
-                        </td>
-                        <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">CLient Type</span>
-                            {{client.client_type}}
-                        </td>
-                        <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">Reg Type</span>
-                            {{client.entity_type}}
+                            <span class="p-column-title">Assigned User</span>
+                            {{task.assignedUser.fname}}
                         </td>
                         <td>
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editClient(client)"></button>
+                            </div>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-success mr-2" (click)="editClient(client)"></button>
                             </div>
                         </td>
                     </tr>
@@ -86,7 +79,7 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="clientsDialog" [style]="{width: '450px'}" header="Client/Agent Registration" [modal]="true"
+        <p-dialog [(visible)]="tasksDialog" [style]="{width: '450px'}" header="Client/Agent Registration" [modal]="true"
             class="p-fluid">
             <ng-template pTemplate="content">
 
@@ -115,7 +108,7 @@
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="clientId">Client/Agent ID</label>
-                        <input type="text" pInputText id="clientId" [(ngModel)]="client.entity_code" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.entity_code}">
+                        <input type="text" pInputText id="clientId" [(ngModel)]="client.title" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.title}">
                     </div>
                     <div class="field col">
                         <label for="tel">Telephone</label>

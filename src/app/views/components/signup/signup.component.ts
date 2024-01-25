@@ -54,7 +54,7 @@ export class SignupComponent {
 
             this.apiService.signup(payload).subscribe(
                 (result: any) => {
-                    if (result.status === 'OK') {
+                    if (result.status === 'CREATED') {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',

@@ -10,7 +10,10 @@
                     </div>
                 </ng-template>
 
-                <ng-template pTemplate="right">
+                <ng-template pTemplate="right" style="justify-content: space-between;">
+                    <span style="margin-right: 20px;">
+                        <p-dropdown [options]="projects" [(ngModel)]="projectId" placeholder="Select a Project" optionLabel="title" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [showClear]="false"></p-dropdown>
+                    </span>
                     <button pButton pRipple label="Export to CSV" icon="pi pi-upload" class="p-button-help"
                         (click)="dt.exportCSV()"></button>
                 </ng-template>

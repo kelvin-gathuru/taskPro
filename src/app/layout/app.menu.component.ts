@@ -22,11 +22,18 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
+                label: 'Projects',
+                icon: 'pi pi-fw pi-briefcase',
+                items: [
+                    { label: 'Project List', icon: 'pi pi-fw pi-briefcase', routerLink: ['/dashboard/projects/list'] }
+                ]
+            },
+            {
                 label: 'Tasks',
                 icon: 'pi pi-fw pi-cog',
                 items: [
-                    { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/dashboard/tasks/list'] },
-                    { label: 'Kanban', icon: 'pi pi-fw pi-window-minimize', routerLink: ['/dashboard/tasks/kanban'] },
+                    { label: 'Task List', icon: 'pi pi-fw pi-stopwatch', routerLink: ['/dashboard/tasks/list'] },
+                    { label: 'Kanban', icon: 'pi pi-fw pi-sitemap', routerLink: ['/dashboard/tasks/kanban'] },
                 ]
             }
         ];

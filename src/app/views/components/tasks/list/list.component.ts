@@ -25,16 +25,14 @@ export class ListComponent implements OnInit {
 
     tasks: any[];
 
-    regions: any[] ;
-
     regType: { label: string; value: string; }[];
     salesType: { label: string; value: string; }[];
+    projects: any;
 
     constructor(private messageService: MessageService, private apiService: ApiService) { }
 
     ngOnInit() {
-
-      this.loadReportsForListing();
+      this.loadProjectsForListing();
 
         this.cols = [
             { field: 'title', header: 'Task' },
@@ -127,17 +125,27 @@ export class ListComponent implements OnInit {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
-    loadReportsForListing() {
-      // Call the ApiService to fetch property data for listing
-      this.apiService.listTasks().subscribe(
-        (data: any) => {
-          this.tasks = data.data.stages.tasks;
-        },
-        (error) => {
-          console.error('Error fetching property data:', error);
-        }
-      );
-    }
+    loadProjectsForListing() {
+        // Call the ApiService to fetch property data for listing
+        this.apiService.listProjects().subscribe(
+          (data: any) => {
+            this.projects = data.data.projects;
+          },
+          (error) => {
+            console.error('Error fetching property data:', error);
+          }
+        );
+      }
+      onProjectChange(result:any){
+        this.apiService.listTasks(result.id).subscribe(
+            (data: any) => {
+              this.tasks = data.data.tasks;
+            },
+            (error) => {
+              console.error('Error fetching property data:', error);
+            }
+          );
+      }
 
     
 }

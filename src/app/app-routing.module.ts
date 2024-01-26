@@ -14,6 +14,7 @@ import { SignupComponent } from './views/components/signup/signup.component';
                 children: [
                     { path: '', loadChildren: () => import('./views/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'tasks', loadChildren: () => import('./views/components/tasks/tasks.module').then(m => m.TasksModule) },
+                    { path: 'projects', loadChildren: () => import('./views/components/projects/projects.module').then(m => m.ProjectsModule) },
                 ]
             },
             { path: 'notfound', component: NotfoundComponent },

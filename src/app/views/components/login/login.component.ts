@@ -51,6 +51,7 @@ export class LoginComponent {
                         this.showSpinner = false;
                         this.disableButton = false;
                         sessionStorage.setItem('token', result.data.token);
+                        sessionStorage.setItem('userID',result.data.user.id);
                         this.router.navigate(['/dashboard']);
                     } else {
                         this.messageService.add({

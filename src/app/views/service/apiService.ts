@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -10,6 +10,8 @@ export class ApiService {
   private baseUrl = environment.apiUrl;
 
   private token = sessionStorage.getItem('token');
+
+  private userId = sessionStorage.getItem('userID');
 
   constructor(private http: HttpClient) {}
 
@@ -30,12 +32,34 @@ export class ApiService {
 
     return this.http.get<any[]>(endpoint, { headers });
   }
-  listTasks(): Observable<any[]> {
-    const endpoint = `${this.baseUrl}allStagesAndTheirTasks`;
+  listTasks(projectId: any): Observable<any[]> {
+    const endpoint = `${this.baseUrl}getUserTasks/userId=${this.userId}/projectId=${projectId}`;
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
 
-    return this.http.get<any[]>(endpoint, { headers });
+    return this.http.get<any[]>(endpoint, { headers});
+  }
+  listProjects(): Observable<any[]> {
+    const endpoint = `${this.baseUrl}getProjects/userId=${this.userId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.get<any[]>(endpoint, { headers});
+  }
+  createProject(project: any): Observable<any> {
+    const url = `${this.baseUrl}createProject/userId=${this.userId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(url, project, {headers} );
+  }
+  deleteProject(projectId: any): Observable<any> {
+    const url = `${this.baseUrl}deleteProject/projectId=${projectId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.delete(url, {headers} );
   }
 }

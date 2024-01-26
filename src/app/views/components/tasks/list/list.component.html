@@ -5,14 +5,14 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="New Task" icon="pi pi-plus" class="p-button-success mr-2"
-                            (click)="openNew()"></button>
+                        <p-dropdown [options]="projects" [(ngModel)]="selectedProject" placeholder="Select a Project" optionLabel="title" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [showClear]="false"></p-dropdown>
                     </div>
                 </ng-template>
 
                 <ng-template pTemplate="right" style="justify-content: space-between;">
-                    <span style="margin-right: 20px;">
-                        <p-dropdown [options]="projects" [(ngModel)]="projectId" placeholder="Select a Project" optionLabel="title" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [showClear]="false"></p-dropdown>
+                    <span style="margin-right: 20px;" >
+                        <button pButton pRipple label="New Task" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
                     </span>
                     <button pButton pRipple label="Export to CSV" icon="pi pi-upload" class="p-button-help"
                         (click)="dt.exportCSV()"></button>
@@ -71,10 +71,9 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editClient(client)"></button>
-                            </div>
-                            <div class="flex">
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-success mr-2" (click)="editClient(client)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editTask(task)"></button>
+
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-success mr-2" (click)="deleteTask(task)"></button>
                             </div>
                         </td>
                     </tr>
@@ -82,58 +81,41 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="tasksDialog" [style]="{width: '450px'}" header="Client/Agent Registration" [modal]="true"
+        <p-dialog [(visible)]="taskDialog" [style]="{width: '450px'}" header="Task Registration" [modal]="true"
             class="p-fluid">
             <ng-template pTemplate="content">
 
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="entity_type">Registration Type</label>
-                        <p-dropdown [(ngModel)]="client.entity_type" inputId="entity_type" [options]="regType" placeholder="Select">
-                        </p-dropdown>
-                    </div>
-                    <div class="field col">
-                        <label for="client_type">Sales Type</label>
-                        <p-dropdown [(ngModel)]="client.client_type" inputId="client_type" [options]="salesType" placeholder="Select">
-                        </p-dropdown>
-                    </div>
+                <div class="field">
+                    <label for="title">Task</label>
+                    <input type="text" pInputText id="title" [(ngModel)]="task.title" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !task.title}"/>
                 </div>
                 <div class="field">
-                    <label for="region">Region</label>
-                    <p-dropdown [options]="regions.items" [(ngModel)]="client.region" inputId="region"  optionLabel="name" placeholder="Select">
-                    </p-dropdown>
+                    <label for="description">Description</label>
+                    <textarea id="description" pInputTextarea [(ngModel)]="task.description" required rows="3" cols="20" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !task.title}"></textarea>
                 </div>
-                <div class="field">
-                    <label for="active">Status</label>
-                    <p-dropdown [options]="statuses" [(ngModel)]="client.active" inputId="active" optionValue="label"  placeholder="Select">
-                    </p-dropdown>
-                </div>
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="clientId">Client/Agent ID</label>
-                        <input type="text" pInputText id="clientId" [(ngModel)]="client.title" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.title}">
-                    </div>
-                    <div class="field col">
-                        <label for="tel">Telephone</label>
-                        <div class="p-inputgroup">
-                            <span class="p-inputgroup-addon">+254</span>
-                            <input type="text" pInputText id="tel" [(ngModel)]="client.phone_number" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.phone_number}">
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="name">Names</label>
-                    <input pInputText id="name" [(ngModel)]="client.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !client.name}">
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !client.name">Name is required.</small>
-				</div>
                 
+                <div class="field">
+                    <label for="name">Stage</label>
+                    <p-dropdown [options]="projects" placeholder="Select a Project" optionLabel="title" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [virtualScroll]="true"  [showClear]="false"></p-dropdown>
+				</div>
+                <div class="formgrid grid" style="margin-top: 40px;">
+                    <div class="field col">
+                        <label for="clientId">Due Date</label>
+                        <p-calendar [(ngModel)]="date" [minDate]="minDate"  placeholder="Select a Date"></p-calendar> 
+                    </div>
+                    <div class="field col">
+                        <label for="priority">Priority</label>
+                        <p-dropdown [options]="priority" placeholder="Select a priority" optionLabel="label" [(ngModel)]="task.priority" (ngModelChange)="onProjectChange($event)" [virtualScroll]="true" [showClear]="false">
+                        </p-dropdown>
+                    </div>
+                </div>
             </ng-template>
 
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
                     (click)="hideDialog()"></button>
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
-                    (click)="saveProduct()"></button>
+                    (click)="hideDialog()"></button>
             </ng-template>
         </p-dialog>
 

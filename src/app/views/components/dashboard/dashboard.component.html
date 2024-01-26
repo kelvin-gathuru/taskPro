@@ -1,4 +1,8 @@
     <div class="grid">
+        <div class="col-12 lg:col-6 xl:col-12">
+            <p-dropdown [options]="projects" [(ngModel)]="projects" placeholder="Select a Project" optionLabel="title"  (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [showClear]="false"></p-dropdown>
+        </div>
+        
         <div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
@@ -102,48 +106,22 @@
                 <div class="flex justify-content-between align-items-center mb-5">
                     <h5>Todays Tasks with Priority</h5>
                     <div>
-                        <p-menu #menu [popup]="true" [model]="items"></p-menu>
+                        <p-menu #menu [popup]="true" [model]="todayTasksWithPriority"></p-menu>
                     </div>
                 </div>
                 <ul class="list-none p-0 m-0">
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Task 1</span>
-                            
+                    <li *ngFor="let task of todayTasksWithPriority" class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
+                      <div>
+                        <span class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ task[0] }}</span>
+                      </div>
+                      <div class="mt-2 md:mt-0 flex align-items-center">
+                        <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" [ngStyle]="{ height: '8px' }">
+                          <div [ngStyle]="{ width: getProgressBarWidth(task[1]) }"></div>
                         </div>
-                        <div class="mt-2 md:mt-0 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" [ngStyle]="{height: '8px'}">
-                                <div class="bg-orange-500 h-full" [ngStyle]="{width: '50%'}"></div>
-                            </div>
-                            <span class="text-orange-500 ml-3 font-medium">%50</span>
-                        </div>
+                        <span [ngStyle]="{ color: getTextColor(task[1]) }" class="ml-3 font-medium">{{ getPercentage(task[1]) }}</span>
+                      </div>
                     </li>
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Task 2</span>
-                            
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" [ngStyle]="{height: '8px'}">
-                                <div class="bg-cyan-500 h-full" [ngStyle]="{width: '16%'}"></div>
-                            </div>
-                            <span class="text-cyan-500 ml-3 font-medium">%16</span>
-                        </div>
-                    </li>
-                    <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Task 3</span>
-            
-                        </div>
-                        <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
-                            <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" [ngStyle]="{height: '8px'}">
-                                <div class="bg-pink-500 h-full" [ngStyle]="{width: '67%'}"></div>
-                            </div>
-                            <span class="text-pink-500 ml-3 font-medium">%67</span>
-                        </div>
-                    </li>
-                   
-                </ul>
+                  </ul>
             </div>
     </div>
 </div>

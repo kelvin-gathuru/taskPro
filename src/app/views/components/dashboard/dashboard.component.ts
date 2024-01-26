@@ -13,6 +13,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     recentTasks: any;
 
+    projects:any;
+
     allTasks: any;
 
     assignees: any;
@@ -27,6 +29,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     newlyCreatedButPending: any;
     completed: any;
     newlyCompletedLastSevenDays: any;
+    todayTasksWithPriority: any;
 
     constructor(public layoutService: LayoutService, private apiService: ApiService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(() => {
@@ -35,12 +38,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.loadReportsForListing();
+        this.loadProjectsForListing();
         
     }
-
-    
-
         
 
     ngOnDestroy() {
@@ -48,10 +48,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.subscription.unsubscribe();
         }
     }
-
-    loadReportsForListing() {
+      loadProjectsForListing() {
         // Call the ApiService to fetch property data for listing
-        this.apiService.getReports().subscribe(
+        this.apiService.listProjects().subscribe(
+          (data: any) => {
+            this.projects = data.data.projects;
+          },
+          (error) => {
+            console.error('Error fetching property data:', error);
+          }
+        );
+      }
+      onProjectChange(result:any){
+        console.log("hello")
+        this.apiService.getReports(result.id).subscribe(
           (data: any) => {
             this.allTasks = data.allTasks;
             this.recentTasks = data.recentTasks;
@@ -62,10 +72,46 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.newlyCreatedButPending = data.newlyCreatedButPending;
             this.completed = data.completed;
             this.newlyCompletedLastSevenDays = data.newlyCompletedLastSevenDays;
+            this.todayTasksWithPriority = data.todayTasksWithPriority;
+
+            this.loadProjectsForListing();
           },
           (error) => {
             console.error('Error fetching property data:', error);
           }
         );
       }
+
+      // Inside your component class
+getProgressBarWidth(priority: string): string {
+  switch (priority.toLowerCase()) {
+    case 'high':
+      return '100%';
+    case 'mid':
+      return '50%';
+    case 'low':
+      return '0%';
+    default:
+      return '0%';
+  }
+}
+
+getTextColor(priority: string): string {
+  // You can customize the text color based on priority if needed
+  return 'black';
+}
+
+getPercentage(priority: string): string {
+  switch (priority.toLowerCase()) {
+    case 'high':
+      return '100%';
+    case 'mid':
+      return '50%';
+    case 'low':
+      return '0%';
+    default:
+      return '0%';
+  }
+}
+
 }

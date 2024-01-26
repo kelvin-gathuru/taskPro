@@ -9,7 +9,9 @@ import { ApiService } from 'src/app/views/service/apiService';
 })
 export class ListComponent implements OnInit {
 
-    tasksDialog: boolean = false;
+    taskDialog: boolean = false;
+
+    minDate : Date = new Date();
 
     task: any = {};
 
@@ -19,7 +21,7 @@ export class ListComponent implements OnInit {
 
     cols: any[] = [];
 
-    statuses: any[] = [];
+    priority: any[] = [];
 
     rowsPerPageOptions = [5, 10, 20];
 
@@ -28,11 +30,13 @@ export class ListComponent implements OnInit {
     regType: { label: string; value: string; }[];
     salesType: { label: string; value: string; }[];
     projects: any;
+  selectedProject: any;
 
     constructor(private messageService: MessageService, private apiService: ApiService) { }
 
     ngOnInit() {
       this.loadProjectsForListing();
+      
 
         this.cols = [
             { field: 'title', header: 'Task' },
@@ -42,9 +46,9 @@ export class ListComponent implements OnInit {
             { field: 'assignedUser', header: 'Assigned User' },
         ];
 
-        this.statuses = [
-            { label: 'ACTIVE', value: 'active' },
-            { label: 'INACTIVE', value: 'inactive' }
+        this.priority = [
+            { label: 'HIGH', value: 'high' },
+            { label: 'LOW', value: 'low' }
         ];
 
         this.regType = [
@@ -63,66 +67,22 @@ export class ListComponent implements OnInit {
     openNew() {
         this.task = {};
         this.submitted = false;
-        this.tasksDialog = true;
+        this.taskDialog = true;
     }
 
-    hideDialog() {
-        this.tasksDialog = false;
-    }
 
-    edittask(task: any) {
+    editTask(task: any) {
         this.task = { ...task };
-        this.tasksDialog = true;
-    }
-
-    // saveProduct() {
-    //     this.submitted = true;
-
-    //     if (this.product.name?.trim()) {
-    //         if (this.product.id) {
-    //             // @ts-ignore
-    //             this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-    //             this.products[this.findIndexById(this.product.id)] = this.product;
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-    //         } else {
-    //             this.product.id = this.createId();
-    //             this.product.code = this.createId();
-    //             this.product.image = 'product-placeholder.svg';
-    //             // @ts-ignore
-    //             this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-    //             this.products.push(this.product);
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-    //         }
-
-    //         this.products = [...this.products];
-    //         this.tasksDialog = false;
-    //         this.product = {};
-    //     }
-    // }
-
-    // findIndexById(id: string): number {
-    //     let index = -1;
-    //     for (let i = 0; i < this.products.length; i++) {
-    //         if (this.products[i].id === id) {
-    //             index = i;
-    //             break;
-    //         }
-    //     }
-
-    //     return index;
-    // }
-
-    createId(): string {
-        let id = '';
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
+        this.taskDialog = true;
     }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    hideDialog() {
+        this.taskDialog = false;
+        this.submitted = false;
     }
 
     loadProjectsForListing() {
@@ -140,6 +100,7 @@ export class ListComponent implements OnInit {
         this.apiService.listTasks(result.id).subscribe(
             (data: any) => {
               this.tasks = data.data.tasks;
+              this.loadProjectsForListing();
             },
             (error) => {
               console.error('Error fetching property data:', error);

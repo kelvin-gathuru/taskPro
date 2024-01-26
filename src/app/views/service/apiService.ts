@@ -24,8 +24,8 @@ export class ApiService {
     const url = `${this.baseUrl}auth/login`;
     return this.http.post(url, credentials);
   }
-  getReports(): Observable<any[]> {
-    const endpoint = `${this.baseUrl}report`;
+  getReports(projectId: any): Observable<any[]> {
+    const endpoint = `${this.baseUrl}report/projectId=${projectId}`;
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });

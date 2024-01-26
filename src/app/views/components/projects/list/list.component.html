@@ -34,7 +34,6 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>#</th>
-                        <th pSortableColumn="id"> Project ID <p-sortIcon field="id"></p-sortIcon></th>
                         <th pSortableColumn="title">Project <p-sortIcon field="title"></p-sortIcon></th>
                         <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
                     </tr>
@@ -43,10 +42,6 @@
                     <tr>
                         <td>
                             {{rowIndex + 1 }}
-                        </td>
-                        <td style="width:15%; min-width:10rem;">
-                            <span class="p-column-title">Project ID </span>
-                            {{project.id}}
                         </td>
                         <td style="width:15%; min-width:10rem;">
                             <span class="p-column-title"> Project </span>

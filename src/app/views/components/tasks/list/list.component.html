@@ -10,12 +10,50 @@
                 </ng-template>
 
                 <ng-template pTemplate="right" style="justify-content: space-between;">
-                    <span style="margin-right: 20px;" >
+                    <span style="margin-right: 20px;" *ngIf="selectedProject !== null">
+                        <button pButton pRipple label="Stages" icon="pi pi-plus" class="p-button-help mr-2"
+                        (click)="op2.toggle($event)"></button>
+
+                            <p-overlayPanel #op2 [showCloseIcon]="true" [style]="{width: '400px'}">
+                                <ng-template pTemplate>
+                                    <p-table [value]="stages" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th style="min-width:4rem">#</th>
+                                                <th style="min-width:5rem">Name</th>
+                                            </tr>
+                                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="addStage(stage)"></button>
+
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-stage let-rowIndex="rowIndex">
+                                            <tr>
+                                            <td>
+                                                {{rowIndex + 1 }}
+                                            </td>
+                                            <td>
+                                                {{stage.name }}
+                                            </td>
+                                            <td>
+                                                <div class="flex">
+                                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editStage(stage)"></button>
+                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </ng-template>
+                            </p-overlayPanel>
+                    </span>
+
+                    <span style="margin-right: 20px;" *ngIf="selectedProject !== null">
                         <button pButton pRipple label="New Task" icon="pi pi-plus" class="p-button-success mr-2"
                             (click)="openNew()"></button>
                     </span>
+                    <span *ngIf="selectedProject !== null">
                     <button pButton pRipple label="Export to CSV" icon="pi pi-upload" class="p-button-help"
                         (click)="dt.exportCSV()"></button>
+                    </span>
                 </ng-template>
             </p-toolbar>
 
@@ -26,7 +64,15 @@
                 [(selection)]="selectedtasks" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h5 class="m-0">Tasks</h5>
+                        <h5 class="m-0">Tasks <p  *ngIf="selectedProject === null" style="margin-top: 30px;">
+                            <p-messages severity="error">
+                                <ng-template pTemplate >
+                                    <i class="pi pi-exclamation-triangle"></i>
+                                    <div class="ml-2">Select a Project to view the tasks.</div>
+                                </ng-template>
+                            </p-messages>
+                            
+                        </p>  <span style="color: blueviolet;" *ngIf="selectedProject !== null"> : {{selectedProject.title}}</span> </h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
@@ -81,7 +127,7 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="taskDialog" [style]="{width: '450px'}" header="Task Registration" [modal]="true"
+        <p-dialog [(visible)]="taskDialog" [style]="{width: '450px'}" header="Task Registration" [modal]="true" resizable="true"
             class="p-fluid">
             <ng-template pTemplate="content">
 
@@ -96,7 +142,7 @@
                 
                 <div class="field">
                     <label for="name">Stage</label>
-                    <p-dropdown [options]="projects" placeholder="Select a Project" optionLabel="title" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [virtualScroll]="true"  [showClear]="false"></p-dropdown>
+                    <p-dropdown [options]="stages" placeholder="Select a stage" optionLabel="name" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="name" [virtualScroll]="true"  [showClear]="false"></p-dropdown>
 				</div>
                 <div class="formgrid grid" style="margin-top: 40px;">
                     <div class="field col">
@@ -116,6 +162,25 @@
                     (click)="hideDialog()"></button>
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
                     (click)="hideDialog()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="stageDialog" [style]="{width: '400px'}" header="Stage" [modal]="true" resizable="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+
+                <div class="field">
+                    <label for="title">Stage Name</label>
+                    <input type="text" pInputText id="title" [(ngModel)]="stage.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !stage.name}"/>
+                </div>
+                
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveStage()"></button>
             </ng-template>
         </p-dialog>
 

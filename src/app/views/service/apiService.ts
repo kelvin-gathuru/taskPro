@@ -62,4 +62,18 @@ export class ApiService {
     });
     return this.http.delete(url, {headers} );
   }
+  listStagesandTasks(projectId: any): Observable<any[]> {
+    const endpoint = `${this.baseUrl}allStagesAndTheirTasks/projectId=${projectId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get<any[]>(endpoint, { headers});
+  }
+  createStage(stage: any, projectId: any): Observable<any> {
+    const url = `${this.baseUrl}createStage/projectId=${projectId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(url, stage, {headers} );
+  }
 }

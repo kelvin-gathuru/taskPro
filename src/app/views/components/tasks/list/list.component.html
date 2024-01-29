@@ -33,13 +33,11 @@
                                         <td>
                                             {{rowIndex + 1 }}
                                         </td>
-                                        
-                                        <td>
-                                            {{member.email }}
-                                        </td>
-
                                         <td>
                                             {{member.fname }}
+                                        </td>
+                                        <td>
+                                            {{member.email }}
                                         </td>
                                         <td>
                                             <div class="flex">
@@ -336,7 +334,7 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="deleteAssignment(assigned)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="deleteAssignment(user)"></button>
                             </div>
                         </td>
                         
@@ -375,7 +373,7 @@
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="removeMemberDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmRemoveMember()"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmRemoveMember()" ></button>
             </ng-template>
         </p-dialog>
 

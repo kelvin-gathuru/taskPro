@@ -65,6 +65,7 @@ export class ListComponent implements OnInit {
 
     selectedDate: any;
     assigned: any;
+    membersNotAssigned: any;
 
     constructor(private messageService: MessageService, private apiService: ApiService) { }
 
@@ -120,6 +121,7 @@ assignedUsers(task: any) {
     this.assigned = this.task.assignedUser;
     this.submitted = false;
     this.assignedUserDialog = true;
+    this.membersNotAssigned = this.getUsersNotInProject()
 }
 
     editStage(stage: any) {
@@ -488,8 +490,11 @@ assignedUsers(task: any) {
 }
 
 confirmRemoveMember() {
-      
-    this.apiService.deleteTask(this.task.id).subscribe(
+    const payload = {
+        projectId: this.selectedProject.id,
+        assigneeUserId: [this.member.id]
+    };
+    this.apiService.deleteMember(payload).subscribe(
         (result: any) => {
             if (result.status === 'OK') {
                 this.messageService.add({
@@ -500,6 +505,8 @@ confirmRemoveMember() {
                 this.loadProjectsForListing()
                 this.loadStagesandTasks();
                 this.loadTasks();
+                this.loadProjectMembers();
+                this.loadUsers();
             } else {
                 this.messageService.add({
                     severity: 'error',
@@ -518,7 +525,7 @@ confirmRemoveMember() {
         }
     );
     this.task = {};
-    this.deleteTaskDialog = false;
+    this.removeMemberDialog = false;
 }
 
 assignMember(member: any) {
@@ -609,5 +616,13 @@ deleteAssignment(assigned: any) {
       return [];
     }
     return this.users.filter(user => !this.members.some(member => member.id === user.id));
+  }
+
+  getMembersNotAssigned(): any {
+    if (!Array.isArray(this.members) || !Array.isArray(this.assigned)) {
+      // Handle the case where either allUsers or projectMembers is not an array
+      return [];
+    }
+    return this.members.filter(member => !this.assigned.some(assigne => assigne.id === member.id));
   }
 }

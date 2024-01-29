@@ -110,10 +110,36 @@ export class ListComponent implements OnInit {
 
         if (this.project.title?.trim()&& this.project.description?.trim()) {
             if (this.project.id) {
-                // @ts-ignore
-                // this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-                // this.products[this.findIndexById(this.product.id)] = this.product;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                const payload = {
+                    title: this.project.title,
+                    description: this.project.description,
+                };
+                this.apiService.updateProject(payload,this.project.id).subscribe(
+                    (result: any) => {
+                        if (result.status === 'OK') {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: result.message,
+                            });
+                            this.loadProjectsForListing()
+                        } else {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: result.message,
+                            });
+                        }
+                    },
+                    (error) => {
+                        console.error(error);
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Something went wrong',
+                        });
+                    }
+                );
             } else {
                 const payload = {
                     title: this.project.title,

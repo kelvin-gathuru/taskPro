@@ -55,12 +55,26 @@ export class ApiService {
     });
     return this.http.post(url, project, {headers} );
   }
+  updateProject(project: any, projectId:any): Observable<any> {
+    const url = `${this.baseUrl}updateProject/projectId=${projectId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.put(url, project, {headers} );
+  }
   deleteProject(projectId: any): Observable<any> {
     const url = `${this.baseUrl}deleteProject/projectId=${projectId}`;
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
     return this.http.delete(url, {headers} );
+  }
+  deleteMember(payload: any): Observable<any> {
+    const url = `${this.baseUrl}deleteMember`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(url, payload, {headers} );
   }
   listStagesandTasks(projectId: any): Observable<any[]> {
     const endpoint = `${this.baseUrl}allStagesAndTheirTasks/projectId=${projectId}`;

@@ -56,7 +56,7 @@ export class LoginComponent {
                             
                         this.showSpinner = false;
                         this.disableButton = false;
-                          }, 4000); 
+                          }, 5000); 
                           
                     } else {
                         this.messageService.add({

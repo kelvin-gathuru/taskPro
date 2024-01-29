@@ -17,11 +17,21 @@ export class ListComponent implements OnInit {
 
     stageDialog: boolean =false;
 
+    memberDialog: boolean = false;
+
+    removeMemberDialog: boolean = false;
+
     minDate : Date = new Date();
 
     task: any = {};
 
     stage: any ={};
+
+    member: any ={};
+
+    user: any ={};
+
+    usersNotInProject : any;
 
     selectedtasks: any[]
 
@@ -36,10 +46,14 @@ export class ListComponent implements OnInit {
     tasks: any[];
 
     projects: any;
+
+    users: any;
   
     selectedProject: any = null;
   
     stages: any;
+
+    members: any;
 
     selectedStage: any;
 
@@ -51,7 +65,6 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
       this.loadProjectsForListing();
-      console.log(this.selectedProject)
 
         this.cols = [
             { field: 'title', header: 'Task' },
@@ -86,6 +99,12 @@ export class ListComponent implements OnInit {
       this.stageDialog = true;
   }
 
+  addMember() {
+    this.usersNotInProject = this.getUsersNotInProject();
+    this.submitted = false;
+    this.memberDialog = true;
+}
+
     editStage(stage: any) {
       this.stage = { ...stage };
       this.stageDialog = true;
@@ -106,6 +125,17 @@ export class ListComponent implements OnInit {
         this.apiService.listProjects().subscribe(
           (data: any) => {
             this.projects = data.data.projects;
+          },
+          (error) => {
+            console.error('Error fetching property data:', error);
+          }
+        );
+      }
+      loadProjectMembers() {
+        // Call the ApiService to fetch property data for listing
+        this.apiService.listProjectMembers(this.selectedProject.id).subscribe(
+          (data: any) => {
+            this.members = data;
           },
           (error) => {
             console.error('Error fetching property data:', error);
@@ -137,10 +167,28 @@ export class ListComponent implements OnInit {
         );
 
       }
+      loadUsers(){
+        this.apiService.listUsers().subscribe(
+          (data: any) => {
+            this.users = data;
+          },
+          (error) => {
+            console.error('Error fetching  data:', error);
+          }
+        );
+
+      }
       onProjectChange(result:any){
-        this.loadTasks();
+
+          this.loadTasks();
+
+          this.loadUsers();
 
           this.loadStagesandTasks();
+
+          this.loadProjectMembers();
+
+          
       }
 
       saveStage(){
@@ -224,7 +272,6 @@ export class ListComponent implements OnInit {
   }
 
   confirmDeleteStage() {
-    console.log(this.stage)
       
       this.apiService.deleteStage(this.stage.id).subscribe(
           (result: any) => {
@@ -345,7 +392,6 @@ export class ListComponent implements OnInit {
     this.task = { ...task };
 }
   confirmDeleteTask() {
-    console.log(this.task)
       
       this.apiService.deleteTask(this.task.id).subscribe(
           (result: any) => {
@@ -378,5 +424,91 @@ export class ListComponent implements OnInit {
       this.task = {};
       this.deleteTaskDialog = false;
   }
-    
+
+  addMemberToProject(user: any) {
+    this.user = { ...user };
+    const payload = {
+        projectId: this.selectedProject.id,
+        assigneeUserId: [this.user.id]
+    };
+    this.apiService.addMemberToProject(payload).subscribe(
+        (result: any) => {
+            if (result.status === 'OK') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: result.message,
+                });
+                this.loadProjectsForListing()
+                this.loadStagesandTasks();
+                this.loadTasks();
+                this.loadProjectMembers();
+                this.loadUsers();
+            } else {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: result.message,
+                });
+            }
+        },
+        (error) => {
+            console.error(error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Something went wrong',
+            });
+        }
+    );
+    this.user = {};
+    this.memberDialog = false;
+}
+
+  removeMember(member: any) {
+    this.removeMemberDialog = true;
+    this.member = { ...member };
+}
+
+confirmRemoveMember() {
+      
+    this.apiService.deleteTask(this.task.id).subscribe(
+        (result: any) => {
+            if (result.status === 'OK') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: result.message,
+                });
+                this.loadProjectsForListing()
+                this.loadStagesandTasks();
+                this.loadTasks();
+            } else {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: result.message,
+                });
+            }
+        },
+        (error) => {
+            console.error(error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Something went wrong',
+            });
+        }
+    );
+    this.task = {};
+    this.deleteTaskDialog = false;
+}
+
+  getUsersNotInProject(): any {
+    if (!Array.isArray(this.users) || !Array.isArray(this.members)) {
+      // Handle the case where either allUsers or projectMembers is not an array
+      return [];
+    }
+    return this.users.filter(user => !this.members.some(member => member.id === user.id));
+  }
 }

@@ -11,7 +11,50 @@
 
                 <ng-template pTemplate="right" style="justify-content: space-between;">
                     <span style="margin-right: 20px;" *ngIf="selectedProject !== null">
-                        <button pButton pRipple label="Stages" icon="pi pi-plus" class="p-button-help mr-2"
+                        <button pButton pRipple label="Members" icon="pi pi-users" class="p-button-success mr-2"
+                        (click)="op2.toggle($event)"></button>
+
+                        <p-overlayPanel #op2 [showCloseIcon]="true" [style]="{width: '400px'}">
+                            <ng-template pTemplate>
+                                <p-table [value]="members" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="min-width:4rem">#</th>
+                                            <th style="min-width:5rem">Name</th>
+                                            <th style="min-width:5rem">Email</th>
+                                            <th style="min-width: 5rem;">
+                                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="addMember()"></button>
+                                            </th>
+                                        </tr>
+
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-member let-rowIndex="rowIndex">
+                                        <tr>
+                                        <td>
+                                            {{rowIndex + 1 }}
+                                        </td>
+                                        
+                                        <td>
+                                            {{member.email }}
+                                        </td>
+
+                                        <td>
+                                            {{member.fname }}
+                                        </td>
+                                        <td>
+                                            <div class="flex">
+                                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="removeMember(member)"></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </ng-template>
+                                </p-table>
+                            </ng-template>
+                        </p-overlayPanel>
+
+                    </span>
+                    <span style="margin-right: 20px;" *ngIf="selectedProject !== null">
+                        <button pButton pRipple label="Stages" icon="pi pi-forward" class="p-button-info mr-2"
                         (click)="op2.toggle($event)"></button>
 
                             <p-overlayPanel #op2 [showCloseIcon]="true" [style]="{width: '400px'}">
@@ -190,6 +233,41 @@
             </ng-template>
         </p-dialog>
 
+        <p-dialog [(visible)]="memberDialog" [style]="{width: '500px'}" header="Add Project Members" [modal]="true" resizable="true"
+            class="p-fluid">
+            <ng-template pTemplate>
+                <p-table [value]="usersNotInProject" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="min-width:2rem">#</th>
+                            <th style="min-width:5rem">Name</th>
+                            <th style="min-width:5rem">Email</th>
+                        </tr>
+
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-user let-rowIndex="rowIndex">
+                        <tr>
+                        <td>
+                            {{rowIndex + 1 }}
+                        </td>
+                        <td>
+                            {{user.fname }}
+                        </td>
+                        <td>
+                            {{user.email }}
+                        </td>
+                        
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success mr-2" (click)="addMemberToProject(user)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </ng-template>
+                </p-table>
+            </ng-template>
+        </p-dialog>
+
         <p-dialog [(visible)]="deleteStageDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
@@ -209,6 +287,17 @@
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteTaskDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteTask()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="removeMemberDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="member">Are you sure you want to remove <b>{{member.fname}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="removeMemberDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmRemoveMember()"></button>
             </ng-template>
         </p-dialog>
 

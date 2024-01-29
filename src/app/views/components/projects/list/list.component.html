@@ -43,11 +43,11 @@
                         <td>
                             {{rowIndex + 1 }}
                         </td>
-                        <td style="width:15%; min-width:10rem;">
+                        <td style="width:15%; min-width:20rem;">
                             <span class="p-column-title"> Project </span>
                             {{project.title}}
                         </td>
-                        <td style="width:15%; min-width:10rem;">
+                        <td style="width:15%; min-width:40rem;">
                             <span class="p-column-title">Description</span>
                             {{project.description}}
                         </td>
@@ -56,7 +56,7 @@
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProject(project)"></button>
 
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-success mr-2" (click)="deleteProject(project)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="deleteProject(project)"></button>
                             </div>
                         </td>
                     </tr>

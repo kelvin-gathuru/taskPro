@@ -112,4 +112,25 @@ export class ApiService {
     });
     return this.http.delete(url, {headers} );
   }
+  listProjectMembers(projectId: any): Observable<any[]> {
+    const endpoint = `${this.baseUrl}projectMembers/projectId=${projectId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get<any[]>(endpoint, { headers});
+  }
+  listUsers(): Observable<any[]> {
+    const endpoint = `${this.baseUrl}users`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get<any[]>(endpoint, { headers});
+  }
+  addMemberToProject(user: any): Observable<any> {
+    const url = `${this.baseUrl}addMember`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(url, user, {headers} );
+  }
 }

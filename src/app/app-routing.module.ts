@@ -4,13 +4,14 @@ import { NotfoundComponent } from './views/components/notfound/notfound.componen
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { LoginComponent } from './views/components/login/login.component';
 import { SignupComponent } from './views/components/signup/signup.component';
+import { authGuard } from './views/components/guards/auth.guard';
 
 @NgModule({
     imports: [
         RouterModule.forRoot([
             {
                 
-                path: 'dashboard', component: AppLayoutComponent,
+                path: 'dashboard', component: AppLayoutComponent, canActivate:[authGuard],
                 children: [
                     { path: '', loadChildren: () => import('./views/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'tasks', loadChildren: () => import('./views/components/tasks/tasks.module').then(m => m.TasksModule) },

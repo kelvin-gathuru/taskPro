@@ -43,16 +43,21 @@ export class LoginComponent {
             this.apiService.login(payload).subscribe(
                 (result: any) => {
                     if (result.status === 'OK') {
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: result.message,
-                        });
-                        this.showSpinner = false;
-                        this.disableButton = false;
                         sessionStorage.setItem('token', result.data.token);
                         sessionStorage.setItem('userID',result.data.user.id);
-                        this.router.navigate(['/dashboard']);
+                        sessionStorage.setItem('fname',result.data.user.fname);
+                        setTimeout(() => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: result.message,
+                            });
+                            this.router.navigate(['/dashboard']);
+                            
+                        this.showSpinner = false;
+                        this.disableButton = false;
+                          }, 4000); 
+                          
                     } else {
                         this.messageService.add({
                             severity: 'error',

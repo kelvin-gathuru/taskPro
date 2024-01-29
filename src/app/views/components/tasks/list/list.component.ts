@@ -11,6 +11,10 @@ export class ListComponent implements OnInit {
 
     taskDialog: boolean = false;
 
+    deleteStageDialog: boolean =false;
+
+    deleteTaskDialog: boolean =false;
+
     stageDialog: boolean =false;
 
     minDate : Date = new Date();
@@ -31,11 +35,17 @@ export class ListComponent implements OnInit {
 
     tasks: any[];
 
-    regType: { label: string; value: string; }[];
-    salesType: { label: string; value: string; }[];
     projects: any;
-  selectedProject: any = null;
-  stages: any;
+  
+    selectedProject: any = null;
+  
+    stages: any;
+
+    selectedStage: any;
+
+    selectedPriority: any;
+
+    selectedDate: any;
 
     constructor(private messageService: MessageService, private apiService: ApiService) { }
 
@@ -56,17 +66,6 @@ export class ListComponent implements OnInit {
             { label: 'LOW', value: 'low' }
         ];
 
-        this.regType = [
-            { label: 'task', value: 'task' },
-            { label: 'SALES AGENT', value: 'salesAgent' },
-            { label: 'OTHERS', value: 'others' }
-        ];
-
-        this.salesType = [
-            { label: 'BULK', value: 'bulk' },
-            { label: 'RETAIL', value: 'retail' },
-            { label: 'OTHERS', value: 'others' }
-        ];
     }
 
     openNew() {
@@ -125,17 +124,21 @@ export class ListComponent implements OnInit {
           }
         );
       }
+      loadTasks(){
+        this.apiService.listTasks(this.selectedProject.id).subscribe(
+          (data: any) => {
+            this.tasks = data.data.tasks;
+            this.ngOnInit();
+            this.loadProjectsForListing();
+          },
+          (error) => {
+            console.error('Error fetching  data:', error);
+          }
+        );
+
+      }
       onProjectChange(result:any){
-        this.apiService.listTasks(result.id).subscribe(
-            (data: any) => {
-              this.tasks = data.data.tasks;
-              this.ngOnInit();
-              this.loadProjectsForListing();
-            },
-            (error) => {
-              console.error('Error fetching  data:', error);
-            }
-          );
+        this.loadTasks();
 
           this.loadStagesandTasks();
       }
@@ -145,10 +148,37 @@ export class ListComponent implements OnInit {
 
         if (this.stage.name?.trim()) {
             if (this.stage.id) {
-                // @ts-ignore
-                // this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-                // this.products[this.findIndexById(this.product.id)] = this.product;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+              const payload = {
+                stageId: this.stage.id,
+                name: this.stage.name,
+            };
+            this.apiService.updateStage(payload).subscribe(
+                (result: any) => {
+                    if (result.status === 'OK') {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: result.message,
+                        });
+                        this.loadProjectsForListing()
+                        this.loadStagesandTasks();
+                    } else {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: result.message,
+                        });
+                    }
+                },
+                (error) => {
+                    console.error(error);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Something went wrong',
+                    });
+                }
+            );
             } else {
                 const payload = {
                     name: this.stage.name,
@@ -188,5 +218,165 @@ export class ListComponent implements OnInit {
         }
     }
 
+    deleteStage(stage: any) {
+      this.deleteStageDialog = true;
+      this.stage = { ...stage };
+  }
+
+  confirmDeleteStage() {
+    console.log(this.stage)
+      
+      this.apiService.deleteStage(this.stage.id).subscribe(
+          (result: any) => {
+              if (result.status === 'OK') {
+                  this.messageService.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: result.message,
+                  });
+                  this.loadProjectsForListing()
+                  this.loadStagesandTasks();
+              } else {
+                  this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: result.message,
+                  });
+              }
+          },
+          (error) => {
+              console.error(error);
+              this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: 'Something went wrong',
+              });
+          }
+      );
+      this.stage = {};
+      this.deleteStageDialog = false;
+  }
+
+  saveTask(){
+    this.submitted=true;
+
+    if (this.task.title?.trim() && this.task.description?.trim() ) {
+        if (this.task.id) {
+          const payload = {
+            title: this.task.title,
+            description: this.task.description,
+            dueDate: this.selectedDate,
+            priority: this.selectedPriority.value,
+            stageId: this.selectedStage.id,
+        };
+        this.apiService.updateTask(payload, this.task.id).subscribe(
+            (result: any) => {
+                if (result.status === 'OK') {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: result.message,
+                    });
+                    this.loadProjectsForListing()
+                    this.loadStagesandTasks();
+                    this.loadTasks();
+                } else {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: result.message,
+                    });
+                }
+            },
+            (error) => {
+                console.error(error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Something went wrong',
+                });
+            }
+        );
+        } else {
+            const payload = {
+                title: this.task.title,
+                description: this.task.description,
+                dueDate: this.selectedDate,
+                priority: this.selectedPriority.value,
+                stageId: this.selectedStage.id,
+            };
+            this.apiService.createTask(payload,this.selectedProject.id).subscribe(
+                (result: any) => {
+                    if (result.status === 'CREATED') {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: result.message,
+                        });
+                        this.loadProjectsForListing()
+                        this.loadStagesandTasks();
+                        this.loadTasks();
+                    } else {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: result.message,
+                        });
+                    }
+                },
+                (error) => {
+                    console.error(error);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Something went wrong',
+                    });
+                }
+            );
+        }
+
+        this.taskDialog = false;
+        this.task = {};
+    }
+}
+
+  deleteTask(task: any) {
+    this.deleteTaskDialog = true;
+    this.task = { ...task };
+}
+  confirmDeleteTask() {
+    console.log(this.task)
+      
+      this.apiService.deleteTask(this.task.id).subscribe(
+          (result: any) => {
+              if (result.status === 'OK') {
+                  this.messageService.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: result.message,
+                  });
+                  this.loadProjectsForListing()
+                  this.loadStagesandTasks();
+                  this.loadTasks();
+              } else {
+                  this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: result.message,
+                  });
+              }
+          },
+          (error) => {
+              console.error(error);
+              this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: 'Something went wrong',
+              });
+          }
+      );
+      this.task = {};
+      this.deleteTaskDialog = false;
+  }
     
 }

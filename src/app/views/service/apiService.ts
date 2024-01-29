@@ -76,4 +76,40 @@ export class ApiService {
     });
     return this.http.post(url, stage, {headers} );
   }
+  updateStage(stage: any): Observable<any> {
+    const url = `${this.baseUrl}updateStageName`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.put(url, stage, {headers} );
+  }
+  deleteStage(stageId: any): Observable<any> {
+    const url = `${this.baseUrl}deleteStage/stageId=${stageId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.delete(url, {headers} );
+  }
+  createTask(task: any, projectId: any): Observable<any> {
+    const url = `${this.baseUrl}createTask/userId=${this.userId}/projectId=${projectId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(url, task, {headers} );
+  }
+  updateTask(stage: any, taskId: any): Observable<any> {
+    const url = `${this.baseUrl}updateTask/taskId=${taskId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.put(url, stage, {headers} );
+  }
+
+  deleteTask(taskId: any): Observable<any> {
+    const url = `${this.baseUrl}deleteTask/taskId=${taskId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.delete(url, {headers} );
+  }
 }

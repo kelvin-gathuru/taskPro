@@ -10,6 +10,8 @@ export class AppTopBarComponent {
 
     items!: MenuItem[];
 
+    fname: any;
+
     tieredItems : any [] = [];
 
     @ViewChild('menubutton') menuButton!: ElementRef;
@@ -20,5 +22,8 @@ export class AppTopBarComponent {
 
     constructor(public layoutService: LayoutService) { }
     ngOnInit(){
+
+        this.fname = sessionStorage.getItem("fname");
+        
     }
 }

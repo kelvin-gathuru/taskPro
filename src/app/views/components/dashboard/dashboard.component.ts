@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        
         this.loadProjectsForListing();
         
     }

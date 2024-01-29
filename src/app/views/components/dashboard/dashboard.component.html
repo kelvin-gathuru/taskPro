@@ -1,5 +1,6 @@
     <div class="grid">
         <div class="col-12 lg:col-6 xl:col-12">
+            <h5>SELECT PROJECT FOR ANALYTICS</h5>
             <p-dropdown [options]="projects" [(ngModel)]="projects" placeholder="Select a Project" optionLabel="title"  (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [showClear]="false"></p-dropdown>
         </div>
         

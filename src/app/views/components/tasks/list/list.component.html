@@ -21,8 +21,10 @@
                                             <tr>
                                                 <th style="min-width:4rem">#</th>
                                                 <th style="min-width:5rem">Name</th>
+                                                <th style="min-width: 5rem;">
+                                                    <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="addStage(stage)"></button>
+                                                </th>
                                             </tr>
-                                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="addStage(stage)"></button>
 
                                         </ng-template>
                                         <ng-template pTemplate="body" let-rowData let-stage let-rowIndex="rowIndex">
@@ -36,7 +38,7 @@
                                             <td>
                                                 <div class="flex">
                                                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editStage(stage)"></button>
-                    
+                                                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="deleteStage(stage)"></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -46,10 +48,7 @@
                             </p-overlayPanel>
                     </span>
 
-                    <span style="margin-right: 20px;" *ngIf="selectedProject !== null">
-                        <button pButton pRipple label="New Task" icon="pi pi-plus" class="p-button-success mr-2"
-                            (click)="openNew()"></button>
-                    </span>
+                    
                     <span *ngIf="selectedProject !== null">
                     <button pButton pRipple label="Export to CSV" icon="pi pi-upload" class="p-button-help"
                         (click)="dt.exportCSV()"></button>
@@ -73,10 +72,17 @@
                             </p-messages>
                             
                         </p>  <span style="color: blueviolet;" *ngIf="selectedProject !== null"> : {{selectedProject.title}}</span> </h5>
-                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                        
+                        <span class="block mt-2 md:mt-0 ">
+                            <span style="margin-right: 20px;" *ngIf="selectedProject !== null">
+                                <button pButton pRipple label="New Task" icon="pi pi-plus" class="p-button-success mr-2"
+                                    (click)="openNew()"></button>
+                            </span>
+                            <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
                                 class="w-full sm:w-auto" />
+                            </span>
                         </span>
                     </div>
                 </ng-template>
@@ -119,7 +125,7 @@
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editTask(task)"></button>
 
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-success mr-2" (click)="deleteTask(task)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="deleteTask(task)"></button>
                             </div>
                         </td>
                     </tr>
@@ -142,16 +148,16 @@
                 
                 <div class="field">
                     <label for="name">Stage</label>
-                    <p-dropdown [options]="stages" placeholder="Select a stage" optionLabel="name" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="name" [virtualScroll]="true"  [showClear]="false"></p-dropdown>
+                    <p-dropdown [options]="stages" placeholder="Select a stage" optionLabel="name" [(ngModel)]="selectedStage" [filter]="true" filterBy="name" [virtualScroll]="true"  [showClear]="false"></p-dropdown>
 				</div>
                 <div class="formgrid grid" style="margin-top: 40px;">
                     <div class="field col">
                         <label for="clientId">Due Date</label>
-                        <p-calendar [(ngModel)]="date" [minDate]="minDate"  placeholder="Select a Date"></p-calendar> 
+                        <p-calendar [(ngModel)]="selectedDate" [minDate]="minDate"  placeholder="Select a Date"></p-calendar> 
                     </div>
                     <div class="field col">
                         <label for="priority">Priority</label>
-                        <p-dropdown [options]="priority" placeholder="Select a priority" optionLabel="label" [(ngModel)]="task.priority" (ngModelChange)="onProjectChange($event)" [virtualScroll]="true" [showClear]="false">
+                        <p-dropdown [options]="priority" placeholder="Select a priority" optionLabel="label" [(ngModel)]="selectedPriority"  [virtualScroll]="true" [showClear]="false">
                         </p-dropdown>
                     </div>
                 </div>
@@ -161,7 +167,7 @@
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
                     (click)="hideDialog()"></button>
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
-                    (click)="hideDialog()"></button>
+                    (click)="saveTask()"></button>
             </ng-template>
         </p-dialog>
 
@@ -181,6 +187,28 @@
                     (click)="hideDialog()"></button>
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
                     (click)="saveStage()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteStageDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="stage">Are you sure you want to delete <b>{{stage.name}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteStageDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteStage()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteTaskDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="task">Are you sure you want to delete <b>{{task.title}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteTaskDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteTask()"></button>
             </ng-template>
         </p-dialog>
 

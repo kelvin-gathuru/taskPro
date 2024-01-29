@@ -10,6 +10,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { DashboardsRoutingModule } from './dashboard-routing.module';
 import { DropdownModule } from 'primeng/dropdown';
+import { MessagesModule } from 'primeng/messages';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import { DropdownModule } from 'primeng/dropdown';
         PanelMenuModule,
         ButtonModule,
         DashboardsRoutingModule,
-        DropdownModule
+        DropdownModule,
+        MessagesModule,
     ],
     declarations: [DashboardComponent]
 })

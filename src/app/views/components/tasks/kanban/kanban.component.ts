@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ApiService } from 'src/app/views/api/api.service';
 
 @Component({
     templateUrl: './kanban.component.html',
@@ -30,13 +29,9 @@ export class KanbanComponent implements OnInit {
     regType: { label: string; value: string; }[];
     salesType: { label: string; value: string; }[];
 
-    constructor(private messageService: MessageService, private apiService: ApiService) { }
+    constructor(private messageService: MessageService) { }
 
     ngOnInit() {
-
-        this.loadClients();
-
-        this.loadRegions();
 
         this.cols = [
             { field: 'name', header: 'Name' },
@@ -131,30 +126,5 @@ export class KanbanComponent implements OnInit {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
-    loadClients() {
-        this.apiService.getClients().subscribe(
-          (data: any) => {
-            if(data.success==false){
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
-            }
-            this.clients = data;
-          },
-          (error) => {
-            console.error('Error fetching clients data:', error);
-          }
-        );
-      }
-      loadRegions() {
-        this.apiService.getRegions().subscribe(
-          (data: any) => {
-            if(data.success==false){
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
-            }
-            this.regions = data;
-          },
-          (error) => {
-            console.error('Error fetching regions data:', error);
-          }
-        );
-      }
+    
 }

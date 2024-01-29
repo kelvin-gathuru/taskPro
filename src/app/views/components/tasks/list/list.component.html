@@ -136,7 +136,7 @@
                         <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
                         <th pSortableColumn="priority">Priority <p-sortIcon field="priority"></p-sortIcon></th>
                         <th pSortableColumn="dueDate">Due Date <p-sortIcon field="dueDate"></p-sortIcon></th>
-                        <th pSortableColumn="assignedUser">Assigned User <p-sortIcon field="assignedUser"></p-sortIcon> </th>
+                        <!-- <th pSortableColumn="assignedUser">Assigned User <p-sortIcon field="assignedUser"></p-sortIcon> </th> -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-task let-rowIndex="rowIndex">
@@ -156,16 +156,18 @@
                             <span class="p-column-title">Priority</span>
                             {{task.priority}}
                         </td>
-                        <td style="width:15%; min-width:10rem;">
+                        <td style="width:15%; min-width:30rem;">
                             <span class="p-column-title">Due Date</span>
                             {{task.dueDate}}
                         </td>
-                        <td style="width:15%; min-width:10rem;">
+                        <!-- <td style="width:15%; min-width:10rem;">
                             <span class="p-column-title">Assigned User</span>
                             {{task.assignedUser.fname}}
-                        </td>
+                        </td> -->
                         <td>
                             <div class="flex">
+                                <button pButton pRipple icon="pi pi-users" class="p-button-rounded p-button-info mr-2" (click)="assignedUsers(task)"></button>
+
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editTask(task)"></button>
 
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="deleteTask(task)"></button>
@@ -262,6 +264,82 @@
                                 <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success mr-2" (click)="addMemberToProject(user)"></button>
                             </div>
                         </td>
+                    </tr>
+                    </ng-template>
+                </p-table>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="assignedUserDialog" [style]="{width: '500px'}" header="AssignedMembers" [modal]="true" resizable="true"
+            class="p-fluid">
+            <ng-template pTemplate>
+                <p-table [value]="assigned" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="min-width:2rem">#</th>
+                            <th style="min-width:5rem">Name</th>
+                            <th style="min-width:5rem">Email</th>
+                            <th>
+                                <div class="flex">
+                                    <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success mr-2" (click)="op2.toggle($event)"></button>
+
+                                    <p-overlayPanel #op2 [showCloseIcon]="true" [style]="{width: '400px'}">
+                                        <ng-template pTemplate>
+                                            <p-table [value]="members" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+                                                <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <th style="min-width:4rem">#</th>
+                                                        <th style="min-width:5rem">Name</th>
+                                                        <th style="min-width:5rem">Email</th>
+                                                        
+                                                    </tr>
+            
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-rowData let-member let-rowIndex="rowIndex">
+                                                    <tr>
+                                                    <td>
+                                                        {{rowIndex + 1 }}
+                                                    </td>
+                                                    
+                                                    <td>
+                                                        {{member.email }}
+                                                    </td>
+            
+                                                    <td>
+                                                        {{member.fname }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="flex">
+                                                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="assignMember(member)"></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </ng-template>
+                                    </p-overlayPanel>
+                                </div>
+                            </th>
+                        </tr>
+
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-user let-rowIndex="rowIndex">
+                        <tr>
+                        <td>
+                            {{rowIndex + 1 }}
+                        </td>
+                        <td>
+                            {{user.fname }}
+                        </td>
+                        <td>
+                            {{user.email }}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-help mr-2" (click)="deleteAssignment(assigned)"></button>
+                            </div>
+                        </td>
+                        
                     </tr>
                     </ng-template>
                 </p-table>

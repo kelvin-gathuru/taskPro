@@ -19,7 +19,11 @@ export class ListComponent implements OnInit {
 
     memberDialog: boolean = false;
 
+    assignedUserDialog: boolean = false;
+
     removeMemberDialog: boolean = false;
+
+    showAssignTaskDialog: boolean = false;
 
     minDate : Date = new Date();
 
@@ -60,6 +64,7 @@ export class ListComponent implements OnInit {
     selectedPriority: any;
 
     selectedDate: any;
+    assigned: any;
 
     constructor(private messageService: MessageService, private apiService: ApiService) { }
 
@@ -103,6 +108,18 @@ export class ListComponent implements OnInit {
     this.usersNotInProject = this.getUsersNotInProject();
     this.submitted = false;
     this.memberDialog = true;
+}
+
+showAssignTask() {
+    this.showAssignTaskDialog = true;
+}
+
+assignedUsers(task: any) {
+    // this.usersNotInProject = this.getUsersNotInProject();
+    this.task = { ...task };
+    this.assigned = this.task.assignedUser;
+    this.submitted = false;
+    this.assignedUserDialog = true;
 }
 
     editStage(stage: any) {
@@ -502,6 +519,88 @@ confirmRemoveMember() {
     );
     this.task = {};
     this.deleteTaskDialog = false;
+}
+
+assignMember(member: any) {
+    this.member = { ...member };
+    const payload = {
+        taskId: this.task.id,
+        assigneeUserId: [this.member.id]
+    };
+    this.apiService.assignTask(payload).subscribe(
+        (result: any) => {
+            if (result.status === 'OK') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: result.message,
+                });
+                this.loadProjectsForListing()
+                this.loadStagesandTasks();
+                this.loadTasks();
+                this.loadProjectMembers();
+                this.loadUsers();
+                
+            } else {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: result.message,
+                });
+            }
+        },
+        (error) => {
+            console.error(error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Something went wrong',
+            });
+        }
+    );
+    this.user = {};
+    this.assignedUserDialog = false;
+}
+
+deleteAssignment(assigned: any) {
+    this.assigned = { ...assigned };
+    const payload = {
+        taskId: this.task.id,
+        assigneeUserId: [this.assigned.id]
+    };
+    this.apiService.deleteAssignment(payload).subscribe(
+        (result: any) => {
+            if (result.status === 'OK') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: result.message,
+                });
+                this.loadProjectsForListing()
+                this.loadStagesandTasks();
+                this.loadTasks();
+                this.loadProjectMembers();
+                this.loadUsers();
+                
+            } else {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: result.message,
+                });
+            }
+        },
+        (error) => {
+            console.error(error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Something went wrong',
+            });
+        }
+    );
+    this.user = {};
+    this.assignedUserDialog = false;
 }
 
   getUsersNotInProject(): any {

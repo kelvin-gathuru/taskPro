@@ -133,4 +133,18 @@ export class ApiService {
     });
     return this.http.post(url, user, {headers} );
   }
+  assignTask(task: any): Observable<any> {
+    const url = `${this.baseUrl}assignTask`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(url, task, {headers} );
+  }
+  deleteAssignment(task: any): Observable<any> {
+    const url = `${this.baseUrl}undoAssignment`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(url, task, {headers} );
+  }
 }

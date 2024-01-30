@@ -161,4 +161,12 @@ export class ApiService {
     });
     return this.http.post(url, task, {headers} );
   }
+
+  updateTaskStage(task: any): Observable<any> {
+    const url = `${this.baseUrl}updateTaskStage`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.put(url, task, {headers} );
+  }
 }

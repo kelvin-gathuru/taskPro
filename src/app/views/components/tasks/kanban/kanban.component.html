@@ -5,13 +5,32 @@
     </form> -->
 
     <div class="proj">
-        <p-dropdown [options]="projects" [(ngModel)]="selectedProject" placeholder="Select a Project" optionLabel="title" (ngModelChange)="onProjectChange($event)" [filter]="true" filterBy="title" [showClear]="false"></p-dropdown>
-    </div>
-
-    <div class="lanes">
-      <div class="swim-lane" id="todo-lane" *ngFor="let stage of stages">
-        <h3 class="heading" >{{stage.name}}</h3>
-        <p class="task" draggable="true" *ngFor="let task of stage.tasks">{{task.title}}</p>
+        <p-dropdown [options]="projects"
+                    [(ngModel)]="selectedProject"
+                    placeholder="Select a Project"
+                    optionLabel="title"
+                    (ngModelChange)="onProjectChange($event)"
+                    [filter]="true"
+                    filterBy="title"
+                    [showClear]="false">
+        </p-dropdown>
       </div>
-    </div>
+      
+      <div class="lanes">
+        <div class="swim-lane" id="todo-lane"
+             *ngFor="let stage of stages"
+             (dragover)="onDragOver($event, zone)"
+             (drop)="onDrop($event, zone)"
+             [attr.data-zone-id]="stage.id"> <!-- Add data-zone-id attribute -->
+          <h3 class="heading">{{stage.name}}</h3>
+          <p class="task" draggable="true"
+             *ngFor="let task of stage.tasks"
+             (dragstart)="onDragStart(task)"
+             (dragend)="onDragEnd(task)"
+             [attr.data-task-id]="task.id"> <!-- Add data-task-id attribute -->
+            {{task.title}}
+          </p>
+        </div>
+      </div>
+      
   </div>

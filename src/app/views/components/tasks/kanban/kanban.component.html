@@ -19,15 +19,11 @@
       <div class="lanes">
         <div class="swim-lane" id="todo-lane"
              *ngFor="let stage of stages"
-             (dragover)="onDragOver($event, zone)"
-             (drop)="onDrop($event, zone)"
-             [attr.data-zone-id]="stage.id"> <!-- Add data-zone-id attribute -->
+             ondrop="drop(event)" ondragover="allowDrop(event)"> <!-- Add data-zone-id attribute -->
           <h3 class="heading">{{stage.name}}</h3>
           <p class="task" draggable="true"
              *ngFor="let task of stage.tasks"
-             (dragstart)="onDragStart(task)"
-             (dragend)="onDragEnd(task)"
-             [attr.data-task-id]="task.id"> <!-- Add data-task-id attribute -->
+             ondragstart="drag(event)"> <!-- Add data-task-id attribute -->
             {{task.title}}
           </p>
         </div>

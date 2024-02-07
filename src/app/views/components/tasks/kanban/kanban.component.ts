@@ -11,6 +11,7 @@ export class KanbanComponent implements OnInit {
     stage: any;
     projects: any;
     selectedProject: any;
+  draggingTask: any;
 
 
     constructor(private messageService: MessageService,private apiService: ApiService, private renderer: Renderer2, private el: ElementRef) { }
@@ -49,15 +50,45 @@ export class KanbanComponent implements OnInit {
 
         
     }
-    allowDrop(ev: any) {
-      ev.preventDefault();
+    
+    onDragStart(item: any){
+      this.draggingTask =item;
+      console.log("startDragging");
     }
-    drag(ev: any) {
-      ev.dataTransfer.setData("text", ev.target.id);
+    onDrop(event: any , stage: any){
+      const payload = {
+        stageId: stage.id,
+        taskId: this.draggingTask.id,
+    };
+    this.apiService.updateTaskStage(payload).subscribe(
+        (result: any) => {
+            if (result.status === 'OK') {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: result.message,
+                });
+                this.loadStagesandTasks();
+            } else {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: result.message,
+                });
+            }
+        },
+        (error) => {
+            console.error(error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Something went wrong',
+            });
+        }
+    );
     }
-    drop(ev: any) {
-      ev.preventDefault();
-      var data = ev.dataTransfer.getData("text");
-      ev.target.appendChild(document.getElementById(data));
+    onDragOver(event: any){
+      console.log("dragOver");
+      event.preventDefault();
     }
 }

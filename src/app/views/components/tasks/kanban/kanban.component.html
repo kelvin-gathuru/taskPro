@@ -1,11 +1,6 @@
-<div class="board">
-    <!-- <form id="todo-form">
-      <input type="text" placeholder="New TODO..." id="todo-input" />
-      <button type="submit">Add +</button>
-    </form> -->
-
-    <div class="proj">
-        <p-dropdown [options]="projects"
+<div style="display: flex; justify-content: space-between; margin-right: 40px; margin-left: 30px;">
+  <h4>SELECT PROJECT TO VIEW KANBAN BOARD</h4>
+  <p-dropdown [options]="projects"
                     [(ngModel)]="selectedProject"
                     placeholder="Select a Project"
                     optionLabel="title"
@@ -14,19 +9,20 @@
                     filterBy="title"
                     [showClear]="false">
         </p-dropdown>
-      </div>
-      
-      <div class="lanes">
-        <div class="swim-lane" id="todo-lane"
-             *ngFor="let stage of stages"
-             ondrop="drop(event)" ondragover="allowDrop(event)"> <!-- Add data-zone-id attribute -->
-          <h3 class="heading">{{stage.name}}</h3>
-          <p class="task" draggable="true"
-             *ngFor="let task of stage.tasks"
-             ondragstart="drag(event)"> <!-- Add data-task-id attribute -->
-            {{task.title}}
-          </p>
+</div>
+<hr>
+<div style="display: flex; justify-content: space-around;"><h4>KANBAN BOARD</h4></div>
+<div class="kanban">
+  <div class="stage" *ngFor="let stage of stages"
+       (drop)="onDrop($event, stage)" (dragover)="onDragOver($event)">
+      <h4>{{stage.name}}</h4>
+      <div class="task" draggable="true" *ngFor="let task of stage.tasks" (dragstart)="onDragStart(task)">
+          <h5 style="color: black;">{{task.title}}</h5>
+          <p>Description: <span style="color: #007bff;">{{task.description}}</span></p>
         </div>
+      <div class="task" id="{{'newTask_' + stage.id}}" (drop)="onDropNewTask($event, stage)"
+           (dragover)="onDragOver($event)">
+          <p>Drag new task here</p>
       </div>
-      
   </div>
+</div>

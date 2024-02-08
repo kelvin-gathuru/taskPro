@@ -63,7 +63,7 @@ export class SignupComponent {
                         this.showSpinner = false;
                         this.disableButton = false;
                         sessionStorage.setItem('token', result.token);
-                        this.router.navigate(['/dashboard']);
+                        this.router.navigate(['']);
                     } else {
                         this.messageService.add({
                             severity: 'error',
